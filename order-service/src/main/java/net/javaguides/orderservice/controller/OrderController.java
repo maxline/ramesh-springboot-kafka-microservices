@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/api/v1")
 public class OrderController {
@@ -19,12 +21,13 @@ public class OrderController {
 
     @PostMapping("/order")
     public String placeOrder(@RequestBody Order order){
+        order.setOrderId(UUID.randomUUID().toString());
         OrderEvent orderEvent = new OrderEvent();
         orderEvent.setStatus("PENDING");
         orderEvent.setMessage("Order status is pending");
         orderEvent.setOrder(order);
         orderProducer.sendMessage(orderEvent);
-        return "Order placed succesfully";
+        return "Order placed successfully";
 
     }
 
